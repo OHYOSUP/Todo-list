@@ -14,7 +14,10 @@ interface IHistorical {
 }
 interface ChartProps {
   coinId: string;
+
 }
+
+
 function Chart({ coinId }: ChartProps) {
   const { isLoading, data } = useQuery<IHistorical[]>(
     ["ohlcv", coinId],
@@ -30,15 +33,15 @@ function Chart({ coinId }: ChartProps) {
       ) : (
         <ApexChart
           type="line"
-          series={[
-            {
-              name: "Price",
-              data: data?.map((price) => price.close),
-            },
-          ]}
+          // series={[
+          //   {
+          //     name: "Price",
+          //     data: data?.map((price) => Number(price.close)),
+          //   },
+          // ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: false ? "dark" : "light",
             },
             chart: {
               height: 300,

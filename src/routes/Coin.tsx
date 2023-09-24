@@ -140,6 +140,10 @@ interface PriceData {
     };
   };
 }
+interface ICoinDarkMode {
+  toggleDark: () => void;
+  isDark: boolean;
+}
 
 function Coin() {
   const { coinId } = useParams<RouteParams>();
@@ -168,6 +172,7 @@ function Coin() {
       <Header>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          <button>Coin DardMode</button>
         </Title>
       </Header>
       {loading ? (

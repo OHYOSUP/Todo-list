@@ -2,6 +2,11 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Coin from "./routes/Coin";
 import Coins from "./routes/Coins";
 
+interface IToggleDark {
+  toggleDark: () => void;
+  
+}
+
 function Router() {
   return (
     <BrowserRouter>
