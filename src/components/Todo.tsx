@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil";
-import { IToDo, toDoState } from "../atoms";
+import { Categories, IToDo, toDoState } from "../atoms";
 
 function Todo({ text, categories, id }: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
@@ -17,9 +17,9 @@ function Todo({ text, categories, id }: IToDo) {
   //   });
   // };
 
-  const onClick = (newCategory: IToDo["categories"]) => {
+  const onClick = (newCategory: Categories) => {
     setToDos((oldTodos) => {
-      const targetIndex = oldTodos.findIndex((todo) => todo.id === id);      
+      const targetIndex = oldTodos.findIndex((todo) => todo.id === id);
       const newTodo = { text, id, categories: newCategory };
 
       return [
@@ -30,21 +30,32 @@ function Todo({ text, categories, id }: IToDo) {
     });
   };
 
+// 에러해결
+
   return (
     <li>
       <span>{text}</span>
-      {categories !== "TO_DO" && (
-        <button name="TO_DO" onClick={() => onClick("TO_DO")}>
+      {categories !== Categories.TO_DO && (
+        <button
+          name={Categories.TO_DO + ""}
+          onClick={() => onClick(Categories.TO_DO)}
+        >
           TO_DO
         </button>
       )}
-      {categories !== "DOING" && (
-        <button name="DOING" onClick={() => onClick("DOING")}>
+      {categories !== Categories.DOING && (
+        <button
+          name={Categories.DOING + ""}
+          onClick={() => onClick(Categories.DOING)}
+        >
           DOING
         </button>
       )}
-      {categories !== "DONE" && (
-        <button name="DONE" onClick={() => onClick("DONE")}>
+      {categories !== Categories.DONE && (
+        <button
+          name={Categories.DONE + ""}
+          onClick={() => onClick(Categories.DONE)}
+        >
           DONE
         </button>
       )}
