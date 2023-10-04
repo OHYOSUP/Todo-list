@@ -1,4 +1,4 @@
-# React Todo-List
+# React 칸반보드
 
 ### Using:
 

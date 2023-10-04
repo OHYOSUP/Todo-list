@@ -3,27 +3,32 @@ import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
 interface ICardProps {
-  todo: string;
+  todoText: string;
+  todoId: number;
   index: number;
 }
 
-const Card = styled.div`
-  background-color: ${(props) => props.theme.cardBgColor};
+const Card = styled.div<{ isDragging: boolean }>`
+  background-color: ${(props) =>
+    props.isDragging ? "#ced6e0" : props.theme.cardBgColor};
   padding: 10px 10px;
   min-height: 20px;
   margin-bottom: 5px;
+  box-shadow: ${(props) =>
+    props.isDragging ? "0px 10px 5px rgb(0, 0, 0, 0.1)" : "none"};
 `;
 
-function DraggableCard({ todo, index }: ICardProps) {  
+function DraggableCard({ todoId, todoText, index }: ICardProps) {
   return (
-    <Draggable key={todo} draggableId={todo} index={index}>
-      {(magic) => (
+    <Draggable key={index} draggableId={todoId+""} index={index}>
+      {(provided, snapshot) => (
         <Card
-          {...magic.dragHandleProps}
-          ref={magic.innerRef}
-          {...magic.draggableProps}
+          isDragging={snapshot.isDragging}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
         >
-          {todo}
+          {todoText}
         </Card>
       )}
     </Draggable>
