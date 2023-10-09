@@ -89,6 +89,7 @@ function Board({ todos, droppaleId }: IBoardProps) {
                 key={todo.todoId}
                 todoId={todo.todoId}
                 todoText={todo.todoText}
+                droppaleId={droppaleId}
                 index={index}
               />
             ))}
