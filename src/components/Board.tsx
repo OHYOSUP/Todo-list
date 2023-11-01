@@ -4,7 +4,7 @@ import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
 import { useForm } from "react-hook-form";
 import { ITodo, toDoState } from "../atoms";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 const Wrapper = styled.div`
   padding: 20px 10px;
   background-color: ${(props) => props.theme.boardColor};
@@ -47,25 +47,34 @@ interface IForm {
 interface IBoardProps {
   todos: ITodo[];
   droppaleId: string;
+  todoIndex: number;
 }
 
-function Board({ todos, droppaleId }: IBoardProps) {
+function Board({ todos, droppaleId, todoIndex }: IBoardProps) {
   const { register, setValue, handleSubmit } = useForm<IForm>();
   const setTodos = useSetRecoilState(toDoState);
+
   const onValid = ({ todo }: IForm) => {
     const newTodo = {
       todoId: Date.now(),
       todoText: todo,
     };
     setTodos((allBoards) => {
-      return {
-        ...allBoards,
-        [droppaleId]: [newTodo, ...allBoards[droppaleId]],
-      };
+      const updatedTodo = allBoards.map((board, index) => {
+        if (index === todoIndex) {
+          return {
+            ...board,
+            [droppaleId]: [newTodo, ...board[droppaleId]],
+          };
+        }
+        return board;
+      });
+  
+      return updatedTodo;
     });
     setValue("todo", "");
   };
-
+  
   return (
     <Wrapper>
       <Title>{droppaleId}</Title>
@@ -84,14 +93,17 @@ function Board({ todos, droppaleId }: IBoardProps) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {todos.map((todo, index) => (
-              <DraggableCard
-                key={todo.todoId}
-                todoId={todo.todoId}
-                todoText={todo.todoText}
-                index={index}
-              />
-            ))}
+            {todos.map((item, index) => {
+              return (
+                <DraggableCard
+                  key={item.todoId}
+                  todoId={item.todoId}
+                  todoText={item.todoText}
+                  index={index}
+                />
+              );
+            })}
+
             {provided.placeholder}
           </Area>
         )}
