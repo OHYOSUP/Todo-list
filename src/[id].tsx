@@ -30,7 +30,7 @@ function Boards() {
   const [todos, setTodos] = useRecoilState(toDoState);
 
   const boardTitle = useRecoilValue(toDoState);
-const arr = [1,2,3]
+
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { draggableId, destination, source } = info;
