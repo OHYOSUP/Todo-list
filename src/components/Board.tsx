@@ -4,13 +4,16 @@ import styled from "styled-components";
 import DraggableCard from "./DraggableCard";
 import { useForm } from "react-hook-form";
 import { ITodo, toDoState } from "../atoms";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 const Wrapper = styled.div`
   padding: 20px 10px;
   background-color: ${(props) => props.theme.boardColor};
   min-height: 200px;
   display: flex;
   flex-direction: column;
+  margin: 40px;
+  min-width: 500px;
+  min-height: 400px;
 `;
 
 const Title = styled.div`
@@ -20,6 +23,12 @@ const Title = styled.div`
   text-align: center;
   padding: 10px 10px;
   margin-bottom: 10px;
+`;
+
+const TodoInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
 `;
 
 interface IAreaProps {
@@ -69,17 +78,17 @@ function Board({ todos, droppaleId, todoIndex }: IBoardProps) {
         }
         return board;
       });
-  
+
       return updatedTodo;
     });
     setValue("todo", "");
   };
-  
+
   return (
     <Wrapper>
       <Title>{droppaleId}</Title>
       <Form onSubmit={handleSubmit(onValid)}>
-        <input
+        <TodoInput
           {...register("todo", { required: true })}
           type="text"
           placeholder="할 일을 입력하세요"

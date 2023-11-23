@@ -51,12 +51,16 @@ function BoardSection() {
   };
 
   const modalOutSideClick = (e: any) => {
+    console.log(e)
     if (e.target === modalRef.current) {
       setIsOpen(false);
-    
     }
-    
 
+    window.addEventListener("keydown", (e)=>{
+      if(e.keyCode === 27){
+        setIsOpen(false)
+      }
+    });
   };
   return (
     <BoardSectionWrapper>
@@ -64,6 +68,7 @@ function BoardSection() {
         <CreateBoards
           modalRef={modalRef}
           modalOutSideClick={modalOutSideClick}
+          setIsOpen = {setIsOpen}
         />
       )}
       <BoardListTitle>Board List</BoardListTitle>

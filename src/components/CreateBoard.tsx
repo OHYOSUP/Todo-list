@@ -1,11 +1,16 @@
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import ErrorMessage from "./ErrorMessage";
+import { useRecoilState } from "recoil";
+import { toDoState } from "../atoms";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
-const CreateBoardWrapper = styled.div`
+const CreateBoardBgWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   hidden: true;
   background-color: rgba(0, 0, 0, 0.5);
-
   top: 0;
   left: 0;
   position: absolute;
@@ -29,18 +34,53 @@ const CreateBoardInput = styled.input`
 interface IIsOpen {
   modalRef: React.ForwardedRef<HTMLDivElement>;
   modalOutSideClick: (e: any) => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function CreateBoards({ modalRef, modalOutSideClick }: IIsOpen) {
+function CreateBoards({ modalRef, modalOutSideClick, setIsOpen }: IIsOpen) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const navigate = useNavigate();
+  const [board, setBoard] = useRecoilState(toDoState);
+
+  const onValid = ({ boardName }: any) => {
+    const newBoard = {
+      [boardName]: [],
+    };
+    setBoard((allBoard) => [...allBoard, newBoard]);
+    setIsOpen(false);
+    navigate(`/${boardName}`);
+  };
+
+  useEffect(() => {
+    const escKeyModalClose = (e: { keyCode: number; }) => {
+      if (e.keyCode === 27) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", escKeyModalClose);
+    return () => window.removeEventListener("keydown", escKeyModalClose);
+  }, []);
+
   return (
-    <CreateBoardWrapper ref={modalRef} onClick={(e) => modalOutSideClick(e)}>
-      <CreateBoardForm>
+    <CreateBoardBgWrapper ref={modalRef} onClick={(e) => modalOutSideClick(e)}>
+      <CreateBoardForm onSubmit={handleSubmit(onValid)}>
         <CreateBoardInput
+          {...register("boardName", {
+            required: true,
+            minLength: {
+              value: 2,
+              message: "보드 이름은 최소 2글자 이상입니다.",
+            },
+          })}
           type="text"
-          required
           placeholder="보드 이름을 입력하세요"
         />
       </CreateBoardForm>
-    </CreateBoardWrapper>
+      {errors && <ErrorMessage message={errors.boardName?.message} />}
+    </CreateBoardBgWrapper>
   );
 }
 
